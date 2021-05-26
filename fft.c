@@ -4,16 +4,18 @@
  * Modifications by Johannes Ehala, Prolab, Taltech
  */
 
-#include "math.h"
+#include <inttypes.h>
+#include <math.h>
+#include "fft.h"
 
-int calc_power(int num_samples)
+uint32_t calc_power(uint32_t num_samples)
 {
-	int p;
-	int power_of_two = 0;
-	if(num_samples != 0 && !(num_samples & (num_samples -1)))
+	uint32_t p;
+	uint32_t power_of_two = 0;
+	if (num_samples != 0 && !(num_samples & (num_samples -1)))
 	{
 		p = num_samples;
-		while(((p & 1) == 0) && p > 1)
+		while (((p & 1) == 0) && p > 1)
 		{
 			p >>= 1;
 			power_of_two++;
@@ -22,57 +24,32 @@ int calc_power(int num_samples)
 	return power_of_two;
 }
 
-void bit_alignment(float *data_startpoint, float *y_startpoint, int data_points) {
-	int i,j,k,i2;
-	double tx;
-
-	i2 = data_points >> 1;
-	j = 0;
-	for (i=0;i<data_points-1;i++)
-	{
-		if (i < j)
-		{
-			tx = *(data_startpoint + i);
-			*(data_startpoint + i) = *(data_startpoint + j);
-			*(data_startpoint + j) = tx;
-		}
-		k = i2;
-		while (k <= j)
-		{
-			j -= k;
-			k >>= 1;
-		}
-		j += k;
-	*(y_startpoint + i) = 0.0;
-	}
-}
-
-void fft_complex(float *signal, int num_samples) 
+void fft_complex(float *signal, uint32_t num_samples) 
 {
-	int i,i1,j,l,l1,l2;
-	float c1,c2,t1,t2,u1,u2,z;
+	uint32_t i, i1, j, l, l1, l2;
+	float c1, c2, t1, t2, u1, u2, z;
 	float* y_startpoint;
-	int p2;
+	uint32_t p2;
 
 	p2 = calc_power(num_samples);
 	y_startpoint = signal + num_samples;
 
 	bit_alignment(signal, y_startpoint, num_samples);
 
-	if(p2 > 0)
+	if (p2 > 0)
 	{
 		c1 = -1.0;
 		c2 = 0.0;
 		l2 = 1;
-		for (l=0;l<p2;l++)
+		for (l = 0; l < p2; l++)
 		{
 			l1 = l2;
 			l2 <<= 1;
 			u1 = 1.0;
 			u2 = 0.0;
-			for (j=0;j<l1;j++)
+			for (j = 0; j < l1; j++)
 			{
-				for (i=j;i<num_samples;i+=l2)
+				for (i = j; i < num_samples; i += l2)
 				{
 					i1 = i + l1;
 					t1 = u1 * *(signal + i1) - u2 * y_startpoint[i1];
@@ -90,11 +67,37 @@ void fft_complex(float *signal, int num_samples)
 			c1 = sqrt((1.0 + c1) / 2.0);
 		}
 
-		for (i=0;i<num_samples;i++)
+		for (i = 0; i < num_samples; i++)
 		{
 			 *(signal + i) /= (double)num_samples;
 			 *(y_startpoint + i) /= (double)num_samples;
 			 *(signal + i) = sqrt(*(signal + i)* *(signal + i) + *(y_startpoint + i)* *(y_startpoint + i));
 		}
+	}
+}
+
+static void bit_alignment(float *data_startpoint, float *y_startpoint, uint32_t data_points)
+{
+	uint32_t i,j,k,i2;
+	double tx;
+
+	i2 = data_points >> 1;
+	j = 0;
+	for (i = 0; i < data_points - 1; i++)
+	{
+		if (i < j)
+		{
+			tx = *(data_startpoint + i);
+			*(data_startpoint + i) = *(data_startpoint + j);
+			*(data_startpoint + j) = tx;
+		}
+		k = i2;
+		while (k <= j)
+		{
+			j -= k;
+			k >>= 1;
+		}
+		j += k;
+	*(y_startpoint + i) = 0.0;
 	}
 }
