@@ -19,8 +19,8 @@ except sin03 which is -1.1...1.1.
  * sin2367 - 4s sine wave 2367 Hz
 
 # Build
-g++ -o fft_calc main.c fft.c
+g++ -o fft_calc main.cpp fft.c
 
 # Usage
-./fft_calc signal/sin01 signal/sin02
-./fft_calc signal/sin03
+./fft_calc signal/sin01.txt signal/sin02.txt \
+./fft_calc signal/sin03.txt
