@@ -210,6 +210,14 @@ int main(int argc, char *argv[]) {
 
                 fclose(fp2);
             }
+
+             /*****************************************************************************
+             * Additional file to support plotting of FFT calculated on moving windows. 
+             * File name is the same as the input file name appended with '_fft_only_windows'. 
+             * 
+             * First column is the x-axis values for all sliding window results. The 
+             * rest of the columns are sliding window results in temporal order.
+            ******************************************************************************/
             
             strcpy(strstr(res_file_name, ".txt"), "_only_windows.txt\0");
 
@@ -239,7 +247,7 @@ int main(int argc, char *argv[]) {
                     }
                 }
 
-                // Print results to file. Full signal and each window result in separate column.
+                // Print results to file. Each window result in separate column.
                 for (k = 0; k < MOVING_WINDOW_SIZE / 2; k++)
                 {
                     fprintf(fp2, "%lf\t", (fq_step_win * k));
