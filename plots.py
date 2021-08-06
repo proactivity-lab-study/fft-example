@@ -24,6 +24,7 @@ x_axis_freqs = fft_res[0:x_lim, 0]
 energy = fft_res[0:x_lim, 1]
 
 fig, (ax0, ax1, ax2) = plt.subplots(3, 1)
+ax0.set_title("Signal")
 ax0.plot(t, s)
 ax1.set_title("FFT on full signal", y=1.0, pad=-14)
 ax1.plot(x_axis_freqs, energy)
@@ -37,7 +38,7 @@ windows_mean = np.mean(fft_windows_res[0:-1, 1:-1], axis=1, dtype=np.float32)
 x_axis_freqs = fft_windows_res[0:x_lim, 0]
 energy = np.transpose(windows_mean)
 
-ax2.set_title("FFT on windows (avg)", y=1.0, pad=-14)
+ax2.set_title("FFT - moving windows (avg)", y=1.0, pad=-14)
 ax2.plot(x_axis_freqs, energy)
 
 plt.show()
