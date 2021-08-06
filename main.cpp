@@ -73,12 +73,12 @@ int main(int argc, char *argv[]) {
             
             while (fgets(line, SIZE_OF_LINE, fp) != NULL)
             {
-                signal[i++] = atof(line);
+                signal[i++] = atof(line); 
             }
             
             if (ferror(fp)) perror("Error: ");
             
-            printf("Read %u lines\n", i);
+            printf("Read %u lines\n", i); // entire signal read into memory
             fclose(fp);
 
             /*****************************************************************************
@@ -210,6 +210,52 @@ int main(int argc, char *argv[]) {
 
                 fclose(fp2);
             }
+            
+            strcpy(strstr(res_file_name, ".txt"), "_only_windows.txt\0");
+
+            fp2 = fopen(res_file_name, "w");
+            
+            if (!fp2)
+            {
+                printf("Failed to open %s!\n", res_file_name);
+            }
+            else 
+            {
+                printf("Writing results to file %s\n", res_file_name);
+
+                // Print header row.
+                fprintf(fp2, "xaxis_fq\t");
+                
+                m = calc_power(SIGNAL_BUF_SIZE);
+                for(k = 1; k <= m; k++)
+                {
+                    if (k == m)
+                    {
+                        fprintf(fp2, "win%u\n", k);
+                    }
+                    else
+                    {
+                        fprintf(fp2, "win%u\t", k);
+                    }
+                }
+
+                // Print results to file. Full signal and each window result in separate column.
+                for (k = 0; k < MOVING_WINDOW_SIZE / 2; k++)
+                {
+                    fprintf(fp2, "%lf\t", (fq_step_win * k));
+                    
+                    for ( m = 0; m < num_windows - 1; m++)
+                    {
+                        fprintf(fp2, "%lf\t", fft[k + (MOVING_WINDOW_SIZE / 2) * m]);
+                    }
+                    
+                    fprintf(fp2, "%lf\n", fft[k + (MOVING_WINDOW_SIZE / 2) * m]);
+                }
+            
+                fclose(fp2);
+            }          
+            
+
         }
     }
 	
