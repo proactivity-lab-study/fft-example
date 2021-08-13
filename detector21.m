@@ -1,4 +1,4 @@
-function [out,f,t]=detector(signal,fs,win,thr)
+function [out,f,t, fig]=detector(signal,fs,win,thr)
 
 % function [out,f,t]=detector(signal,fs,win,thr)
 % 
@@ -21,7 +21,7 @@ end
 
 
 % disp(length(signal)/fs)
- figure
+ fig = figure;
  sgtitle('With Matlab fft implementation')
  
  subplot(3,1,1)
@@ -59,7 +59,7 @@ end
     else
 %     plot(t([locs(m,4) locs(m,4)]),[fl maxfr]/spf,'r')
 %     plot(t([locs(m,4)-3 locs(m,4)-3]),[fl maxfr]/spf,'r')
-     plot(t([locs(m,4)-3 locs(m,4)]),f([locs(m,7) locs(m,7)])/17.3148,'w','LineWidth',4);
+     plot(t([locs(m,4)-3 locs(m,4)]),f([max(1,locs(m,7)) max(1,locs(m,7))])/17.3148,'w','LineWidth',4);
     end   
    end     
     
@@ -240,6 +240,11 @@ function [f,F]=spekter(signal,fs,alg,lopp)
     end
 
     signal=signal(alg:lopp);
+    
+    % TODO check if windowing helps
+    %wd = hanning(length(signal));
+    %signal = signal .* wd;
+    
     y=fft(signal);
     N=size(y,1);
 

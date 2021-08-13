@@ -111,10 +111,7 @@ int main(int argc, char *argv[]) {
             {
                 signal[k] = 0.0;
             }
-            fft_complex(signal, SIGNAL_BUF_SIZE);
-
-            // Calc frequency step for full signal FFT result.
-            fq_step_full = ((float) SAMPLING_RATE / 2) / (SIGNAL_BUF_SIZE / 2);
+            fft_complex(signal, SIGNAL_BUF_SIZE); 
 
             /*****************************************************************************
              * Write results to file. File name is the same as the input file name

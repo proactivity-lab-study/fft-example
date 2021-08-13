@@ -1,0 +1,64 @@
+close all; clc ; clear;
+
+fpath = './signals/smenete_1.txt';
+
+fid = fopen(fpath, 'r');
+signal = fscanf(fid, '%f');
+
+%wd = hanning(length(signal));
+%signal = signal .* wd;
+    
+disp("*** With Matlab fft implementation ***")
+detector21(signal);
+
+fprintf("\n\n*** With custom fft implementation ***\n")
+detector_custom_fft(signal);
+
+%%
+close all;
+fpath = './signals/smenete_2.txt';
+
+fid = fopen(fpath, 'r');
+signal = fscanf(fid, '%f');
+
+
+wd = parzenwin(length(signal));
+signal_wd = signal .* wd;
+
+disp("*** With Matlab fft implementation ***")
+detector21(signal_wd);
+
+%detector21(signal, 3000, 0.65, 1.5);
+
+fprintf("\n\n*** With custom fft implementation ***\n")
+detector_custom_fft(signal, 3000, 0.6, 0.5);
+
+%detector_custom_fft(signal, 3000, 0.6, 1);
+
+
+%%
+close all; clc ; clear;
+
+%fpath = '/home/linomp/code/fft-example/Andmed/08112019/microwave/MICROWAVE/sig_191108_163822.txt';
+
+% BEST
+%fpath = '/home/linomp/code/fft-example/Andmed/08112019/microwave/MICROWAVE/sig_191108_163923.txt';
+
+%fpath = '/home/linomp/code/fft-example/Andmed/08112019/microwave/MICROWAVE/sig_191108_164024.txt';
+%fpath = '/home/linomp/code/fft-example/Andmed/08112019/microwave/MICROWAVE/sig_191108_164129.txt';
+%fpath = '/home/linomp/code/fft-example/Andmed/08112019/microwave/MICROWAVE/sig_191108_164129.txt';
+%fpath = '/home/linomp/code/fft-example/Andmed/08112019/microwave/MICROWAVE/sig_191108_164530.txt';
+
+%fpath = '/home/linomp/code/fft-example/Andmed/08112019/microwave/MICROWAVE/sig_191108_164732.txt';
+
+fid = fopen(fpath, 'r');
+signal = fscanf(fid, '%f');
+
+%wd = hanning(length(signal));
+%signal = signal .* wd;
+    
+disp("*** With Matlab fft implementation ***")
+detector21(signal, 3000, 0.5, 2);
+
+fprintf("\n\n*** With custom fft implementation ***\n")
+detector_custom_fft(signal, 3000, 0.5, 0.5);
